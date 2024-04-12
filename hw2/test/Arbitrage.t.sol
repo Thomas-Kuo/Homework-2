@@ -80,77 +80,30 @@ contract Arbitrage is Test {
          * Please add your solution below
          */
 
-        // 1. tokenB -> tokenA
-        address[] memory pathBA = new address[](2);
-        pathBA[0] = address(tokenB);
-        pathBA[1] = address(tokenA);
-        router.swapExactTokensForTokens(
-            tokenB.balanceOf(arbitrager),
-            0, // 设置为0表示接受任何数量的tokenA
-            pathBA,
-            arbitrager,
-            block.timestamp + 1200 // 设置deadline
-        );
+        // 对所有将会被交换的代币进行批准
+        tokenB.approve(address(router), tokenB.balanceOf(arbitrager));
+        tokenA.approve(address(router), tokenA.balanceOf(arbitrager));
+        tokenC.approve(address(router), tokenC.balanceOf(arbitrager));
+        tokenD.approve(address(router), tokenD.balanceOf(arbitrager));
+        tokenE.approve(address(router), tokenE.balanceOf(arbitrager));
 
-        // 2. tokenA -> tokenC
-        address[] memory pathAC = new address[](2);
-        pathAC[0] = address(tokenA);
-        pathAC[1] = address(tokenC);
+        address[] memory path = new address[](7);
+        path[0] = address(tokenB);
+        path[1] = address(tokenA);
+        path[2] = address(tokenC);
+        path[3] = address(tokenE);
+        path[4] = address(tokenD);
+        path[5] = address(tokenC);
+        path[6] = address(tokenB);
+        
+        uint256 timestop = block.timestamp + 1200;
+        
         router.swapExactTokensForTokens(
-            tokenA.balanceOf(arbitrager),
+            tokensBefore,
             0, // 设置为0表示接受任何数量的tokenC
-            pathAC,
-            arbitrager,
-            block.timestamp + 1200
-        );
-
-        // 3. tokenC -> tokenE
-        address[] memory pathCE = new address[](2);
-        pathCE[0] = address(tokenC);
-        pathCE[1] = address(tokenE);
-        router.swapExactTokensForTokens(
-            tokenC.balanceOf(arbitrager),
-            0, 
-            pathCE,
-            arbitrager,
-            block.timestamp + 1200
-        );
-
-        // 4. tokenE -> tokenD
-        address[] memory pathED = new address[](2);
-        pathED[0] = address(tokenE);
-        pathED[1] = address(tokenD);
-        router.swapExactTokensForTokens(
-            tokenE.balanceOf(arbitrager),
-            0,
-            pathED,
-            arbitrager,
-            block.timestamp + 1200
-        );
-
-        // 5. tokenD -> tokenC
-        address[] memory pathDC = new address[](2);
-        pathDC[0] = address(tokenD);
-        pathDC[1] = address(tokenC);
-        router.swapExactTokensForTokens(
-            tokenD.balanceOf(arbitrager),
-            0,
-            pathDC,
-            arbitrager,
-            block.timestamp + 1200
-        );
-
-        // 6. tokenC -> tokenB
-        address[] memory pathCB = new address[](2);
-        pathCB[0] = address(tokenC);
-        pathCB[1] = address(tokenB);
-        router.swapExactTokensForTokens(
-            tokenC.balanceOf(arbitrager),
-            0,
-            pathCB,
-            arbitrager,
-            block.timestamp + 1200
-        );
+            path, 
+            arbitrager, 
+            timestop);  //设置結束時間
 
         /**
          * Please add your solution above
